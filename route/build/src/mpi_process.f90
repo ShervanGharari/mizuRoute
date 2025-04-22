@@ -31,8 +31,8 @@ USE nr_utils,  ONLY: arth             ! build a vector of regularly spaced numbe
 USE nr_utils,  ONLY: sizeo            ! get size of allocatable array (if not allocated, zero)
 USE nr_utils,  ONLY: findIndex        ! find index within a vector
 USE nr_utils,  ONLY: match_index      !
-USE perf_mod,  ONLY: t_startf         ! timing start
-USE perf_mod,  ONLY: t_stopf          ! timing stop
+! USE perf_mod,  ONLY: t_startf         ! timing start
+! USE perf_mod,  ONLY: t_stopf          ! timing stop
 ! MPI utility
 USE mpi_utils, ONLY: shr_mpi_bcast
 USE mpi_utils, ONLY: shr_mpi_gatherV
@@ -1222,23 +1222,23 @@ CONTAINS
   !  - vol_wm_trib  (all procs)
   ! --------------------------------
   if (doesScatterData) then
-    call t_startf ('route/scatter-runoff')
+    ! call t_startf ('route/scatter-runoff')
     call scatter_runoff(nNodes, comm, ierr, cmessage)
     if(ierr/=0)then; message=trim(message)//trim(cmessage); return; endif
-    call t_stopf ('route/scatter-runoff')
+    ! call t_stopf ('route/scatter-runoff')
 
     if (is_flux_wm .or. (is_vol_wm .and. is_lake_sim)) then
-      call t_startf ('route/scatter-wm')
+      ! call t_startf ('route/scatter-wm')
       call scatter_wm(nNodes, comm, ierr, cmessage)
       if(ierr/=0)then; message=trim(message)//trim(cmessage); return; endif
-      call t_stopf ('route/scatter-wm')
+      ! call t_stopf ('route/scatter-wm')
     end if
   end if
 
   ! --------------------------------
   ! Perform tributary routing (for all procs)
   ! --------------------------------
-  call t_startf ('route/tributary-route')
+  ! call t_startf ('route/tributary-route')
 
   !Idenfity number of tributary reaches for each procs
   allocate(ixRchProcessed(nRch_trib), stat=ierr)
@@ -1271,7 +1271,7 @@ CONTAINS
                   gage_obs_data_trib, &  ! inout: gage obs data for tributary reaches
                   ierr, cmessage)        ! output: error control
   if(ierr/=0)then; message=trim(message)//trim(cmessage); return; endif
-  call t_stopf ('route/tributary-route')
+  ! call t_stopf ('route/tributary-route')
 
   ! --------------------------------
   ! If mainstem(s) do exist, proceed the followings
@@ -1280,7 +1280,7 @@ CONTAINS
     ! --------------------------------
     ! collect flow information from upstream tributary at ghost reaches
     ! --------------------------------
-    call t_startf('route/gather-state-flux')
+    ! call t_startf('route/gather-state-flux')
 
     ! non river flux communication
     call mpi_comm_flux(pid, nNodes, comm,   & ! input: mpi rank, number of tasks, and communicator
@@ -1318,13 +1318,13 @@ CONTAINS
       if(ierr/=0)then; message=trim(message)//trim(cmessage); return; endif
     endif
 
-    call t_stopf('route/gather-state-flux')
+    ! call t_stopf('route/gather-state-flux')
 
     ! --------------------------------
     ! perform mainstem routing (only in main processor)
     ! --------------------------------
     if (masterproc) then
-      call t_startf ('route/mainstem_route')
+      ! call t_startf ('route/mainstem_route')
 
       if (allocated(ixRchProcessed)) then
         deallocate(ixRchProcessed, stat=ierr)
@@ -1353,14 +1353,14 @@ CONTAINS
                       ierr, cmessage)              ! output: error control
       if(ierr/=0)then; message=trim(message)//trim(cmessage); return; endif
 
-      call t_stopf ('route/mainstem_route')
+      ! call t_stopf ('route/mainstem_route')
     endif ! end of root proc
 
     ! --------------------------------
     ! Distribute updated tributary states (only tributary reaches flowing into mainstem) to processors to update states upstream reaches
     ! --------------------------------
     if (onRoute(kinematicWaveTracking)) then
-      call t_startf ('route/scatter-kwt-state')
+      ! call t_startf ('route/scatter-kwt-state')
       call mpi_comm_kwt_state(pid, nNodes, comm,   & ! input: mpi rank, number of tasks, and communicator
                               iens,                & ! input:
                               tribOutlet_per_proc, & ! input: number of reaches communicate per node (dimension size == number of proc)
@@ -1371,18 +1371,18 @@ CONTAINS
                               scatter,             & ! input: 1 = scatter
                               ierr, cmessage)
       if(ierr/=0)then; message=trim(message)//trim(cmessage); return; endif
-      call t_stopf ('route/scatter-kwt-state')
+      ! call t_stopf ('route/scatter-kwt-state')
     endif
 
   endif !(nRch_mainstem==0)
 
   if (compWB) then
-    call t_startf ('route/comp_global_wb')
+    ! call t_startf ('route/comp_global_wb')
     do ixRoute=1,nRoutes
       call comp_global_wb(ixRoute, .true., ierr, cmessage)
       if(ierr/=0)then; message=trim(message)//trim(cmessage); return; endif
     end do
-    call t_stopf ('route/comp_global_wb')
+    ! call t_stopf ('route/comp_global_wb')
   end if
 
  END SUBROUTINE mpi_route

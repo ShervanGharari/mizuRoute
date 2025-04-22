@@ -53,9 +53,11 @@ NCDF_FORTRAN_PATH =
 PNETCDF_PATH =
 PIO_PATH=        # NCAR HPC-> $(PIO)
 
-LIBNETCDF = -Wl,-rpath,$(NCDF_PATH)/lib \
-            -L$(NCDF_PATH)/lib -lnetcdff -lnetcdf
-INCNETCDF = -I$(NCDF_PATH)/include
+LIBNETCDF = -Wl,-rpath,$(NCDF_C_PATH)/lib \
+            -L$(NCDF_C_PATH)/lib -lnetcdf \
+            -Wl,-rpath,$(NCDF_FORTRAN_PATH)/lib \
+            -L$(NCDF_FORTRAN_PATH)/lib -lnetcdff
+INCNETCDF = -I$(NCDF_FORTRAN_PATH)/include
 
 # Error check
 ifndef FC
@@ -215,6 +217,7 @@ IO = \
 # CORE
 CORE = \
     advection_diffusion.f90 \
+    data_assimilation.f90 \
     accum_runoff.f90 \
     basinUH.f90 \
     water_balance.f90 \
@@ -224,6 +227,7 @@ CORE = \
     kwe_route.f90 \
     mc_route.f90 \
     dfw_route.f90 \
+    tracer.f90 \
     main_route.f90 \
     mpi_process.f90 \
     init_model_data.f90 \
@@ -251,7 +255,7 @@ LIBDIR = $(F_MASTER)build/lib
 ifdef PIO_PATH
   PIOLIBDIR= $(PIO_PATH)/lib
   PIOINCDIR= $(PIO_PATH)/include
-  PIOLIB   = $(PIOLIBDIR)/libpiof.so $(PIOLIBDIR)/libpioc.so
+  PIOLIB   = $(PIOLIBDIR)/libpiof.a $(PIOLIBDIR)/libpioc.a
 else
   PIOLIBDIR    = $(LIBDIR)/piolib/lib
   PIOINCDIR    = $(LIBDIR)/piolib/include

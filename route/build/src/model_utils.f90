@@ -15,8 +15,8 @@ CONTAINS
  ! *********************************************************************
  SUBROUTINE model_finalize(comm)
 
-  USE perf_mod,   ONLY: t_prf            ! timing output
-  USE perf_mod,   ONLY: t_finalizef      ! finalize timing routines
+  ! USE perf_mod,   ONLY: t_prf            ! timing output
+  ! USE perf_mod,   ONLY: t_finalizef      ! finalize timing routines
   USE globalData, ONLY: masterproc       ! root proc logical
   USE public_var, ONLY: iulog            ! i/o logical unit number
   USE mpi_utils,  ONLY: shr_mpi_finalize ! mpi utilities: shut down mpi
@@ -30,8 +30,8 @@ CONTAINS
     write(iulog,*) '----------------------'
   end if
 
-  call t_prf(mpicom=comm)
-  call t_finalizef()
+  ! call t_prf(mpicom=comm)
+  ! call t_finalizef()
   call shr_mpi_finalize(comm)
 
   stop

@@ -17,8 +17,8 @@ USE globalData, ONLY: mpicom_route            ! communicator
 ! provide access to desired subroutines...
 ! ****************************************
 ! subroutines: model set up
-USE perf_mod,            ONLY: t_initf          ! initialize timing routines (GPTL library)
-USE perf_mod,            ONLY: t_startf,t_stopf ! timing start/stop (GPTL library)
+! USE perf_mod,            ONLY: t_initf          ! initialize timing routines (GPTL library)
+! USE perf_mod,            ONLY: t_startf,t_stopf ! timing start/stop (GPTL library)
 USE model_setup,         ONLY: init_mpi         ! initialize MPI for this program
 USE model_setup,         ONLY: init_data        ! initialize river reach data
 USE init_model_data,     ONLY: init_model       ! model setupt - reading control file, populate metadata, read parameter file
@@ -55,7 +55,7 @@ logical(lgt)                  :: finished=.false.
 ! *** MPI/timer initialization ....
 ! ***********************************
 call init_mpi()
-call t_initf('dummy_empty_namelist', LogPrint=.true., mpicom=mpicom_route, mastertask=.true.)
+! call t_initf('dummy_empty_namelist', LogPrint=.true., mpicom=mpicom_route, mastertask=.true.)
 
 ! *****
 ! *** model setup
@@ -84,21 +84,21 @@ do while (.not.finished)
   if(ierr/=0) call handle_err(ierr, cmessage)
 
   if(pid==0)then
-    call t_startf ('input')
+    ! call t_startf ('input')
     call get_hru_runoff(ierr, cmessage)
     if(ierr/=0) call handle_err(ierr, cmessage)
-    call t_stopf ('input')
+    ! call t_stopf ('input')
   endif
 
-  call t_startf ('route-total')
+  ! call t_startf ('route-total')
   call mpi_route(pid, nNodes, mpicom_route, iens, ierr, cmessage)
   if(ierr/=0) call handle_err(ierr, cmessage)
-  call t_stopf ('route-total')
+  ! call t_stopf ('route-total')
 
-  call t_startf ('output')
+  ! call t_startf ('output')
   call output(ierr, cmessage)
   if(ierr/=0) call handle_err(ierr, cmessage)
-  call t_stopf ('output')
+  ! call t_stopf ('output')
 
   call main_restart(ierr, cmessage)
   if(ierr/=0) call handle_err(ierr, cmessage)

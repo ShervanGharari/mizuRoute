@@ -241,7 +241,7 @@ CONTAINS
                            ierr,message,         & ! output: error control
                            ixSubRch)               ! optional input: subset of reach indices to be processed
 
-    USE perf_mod,          ONLY: t_startf,t_stopf    ! timing start/stop
+    !USE perf_mod,          ONLY: t_startf,t_stopf    ! timing start/stop
     USE lake_route_module, ONLY: lake_route          ! lake route module
     USE base_route,        ONLY: base_route_rch      !
     USE model_utils,       ONLY: handle_err
@@ -312,7 +312,7 @@ CONTAINS
 
     nOrder = size(river_basin)
 
-    call t_startf('route_network') ! timing start
+    ! call t_startf('route_network') ! timing start
 
     ! routing through river network
     do ix = 1, nOrder
@@ -357,7 +357,7 @@ CONTAINS
 !$OMP END PARALLEL DO
     end do ! basin loop
 
-    call t_stopf('route_network')
+    ! call t_stopf('route_network')
 
   END SUBROUTINE route_network
 
