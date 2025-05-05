@@ -166,7 +166,7 @@ CONTAINS
     ! add upstream, precipitation and subtract evaporation from the lake volume
     RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(0) = RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) ! updating storage at previous time step
     RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) = RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) + q_upstream * dt  ! input upstream discharge from m3/s to m3
-    RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) = RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) + RCHFLX_out(iens,segIndex)%BASIN_QR(1) * dt ! add lateral flow
+    ! RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) = RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) + RCHFLX_out(iens,segIndex)%BASIN_QR(1) * dt ! add lateral flow
     RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) = RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) + RCHFLX_out(iens,segIndex)%basinprecip * dt ! input lake precipitation
     if (RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) > RCHFLX_out(iens,segIndex)%basinevapo*dt) then ! enough water to evaporate
       RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) = RCHFLX_out(iens,segIndex)%ROUTE(idxRoute)%REACH_VOL(1) - RCHFLX_out(iens,segIndex)%basinevapo * dt ! output lake evaporation
