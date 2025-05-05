@@ -86,28 +86,28 @@ CONTAINS
 
   RCHFLX_in%ROUTE(ixRoute)%WB = dVol - (Qin+ Qlateral+ precip+ Qtake_actual+ Qout+ evapo)
 
-  if (verbose .or. abs(RCHFLX_in%ROUTE(ixRoute)%WB) > wb_tol) then
-    write(iulog,'(A)')         ' -------------------------------'
-    write(iulog,'(A)')         ' -- reach water balance check --'
-    write(iulog,'(A)')         ' -------------------------------'
-    write(iulog,'(A,1PG15.7)') '  id                  = ', seg_id
-    write(iulog,'(A,1PG15.7)') '  lake                = ', lakeFlag
-    write(iulog,'(A)')         '  1 = 5-(6+7+8+9+10+12)'
-    write(iulog,'(A,1PG15.7)') '  1 WBerr [m3]        = ', RCHFLX_in%ROUTE(ixRoute)%WB
-    write(iulog,'(A,1PG15.7)') '  3 Vol at t0 [m3]    = ', RCHFLX_in%ROUTE(ixRoute)%REACH_VOL(0)
-    write(iulog,'(A,1PG15.7)') '  4 Vol at t1 [m3]    = ', RCHFLX_in%ROUTE(ixRoute)%REACH_VOL(1)
-    write(iulog,'(A,1PG15.7)') '  5 dVol [m3]         = ', dVol
-    write(iulog,'(A,1PG15.7)') '  6 inflow [m3]       = ', Qin
-    write(iulog,'(A,1PG15.7)') '  7 lateral flow [m3] = ', Qlateral
-    write(iulog,'(A,1PG15.7)') '  8 precip [m3]       = ', precip
-    write(iulog,'(A,1PG15.7)') '  9 outflow [m3]      = ', Qout
-    write(iulog,'(A,1PG15.7)') ' 10 take-actual [m3]  = ', Qtake_actual
-    write(iulog,'(A,1PG15.7)') ' 11 take-demand [m3]  = ', Qtake_demand
-    write(iulog,'(A,1PG15.7)') ' 12 evaporation [m3]  = ', evapo
-  endif
-  if (abs(RCHFLX_in%ROUTE(ixRoute)%WB) > wb_tol) then
-    write(iulog,'(A,1PG15.7,1X,A,1X,1PG15.7)') ' WARNING: abs. WB error [m3] = ', abs(RCHFLX_in%ROUTE(ixRoute)%WB), '>',wb_tol
-  end if
+  !if (verbose .or. abs(RCHFLX_in%ROUTE(ixRoute)%WB) > wb_tol) then
+  !  write(iulog,'(A)')         ' -------------------------------'
+  !  write(iulog,'(A)')         ' -- reach water balance check --'
+  !  write(iulog,'(A)')         ' -------------------------------'
+  !  write(iulog,'(A,1PG15.7)') '  id                  = ', seg_id
+  !  write(iulog,'(A,1PG15.7)') '  lake                = ', lakeFlag
+  !  write(iulog,'(A)')         '  1 = 5-(6+7+8+9+10+12)'
+  !  write(iulog,'(A,1PG15.7)') '  1 WBerr [m3]        = ', RCHFLX_in%ROUTE(ixRoute)%WB
+  !  write(iulog,'(A,1PG15.7)') '  3 Vol at t0 [m3]    = ', RCHFLX_in%ROUTE(ixRoute)%REACH_VOL(0)
+  !  write(iulog,'(A,1PG15.7)') '  4 Vol at t1 [m3]    = ', RCHFLX_in%ROUTE(ixRoute)%REACH_VOL(1)
+  !  write(iulog,'(A,1PG15.7)') '  5 dVol [m3]         = ', dVol
+  !  write(iulog,'(A,1PG15.7)') '  6 inflow [m3]       = ', Qin
+  !  write(iulog,'(A,1PG15.7)') '  7 lateral flow [m3] = ', Qlateral
+  !  write(iulog,'(A,1PG15.7)') '  8 precip [m3]       = ', precip
+  !  write(iulog,'(A,1PG15.7)') '  9 outflow [m3]      = ', Qout
+  !  write(iulog,'(A,1PG15.7)') ' 10 take-actual [m3]  = ', Qtake_actual
+  !  write(iulog,'(A,1PG15.7)') ' 11 take-demand [m3]  = ', Qtake_demand
+  !  write(iulog,'(A,1PG15.7)') ' 12 evaporation [m3]  = ', evapo
+  !endif
+  !if (abs(RCHFLX_in%ROUTE(ixRoute)%WB) > wb_tol) then
+  !  write(iulog,'(A,1PG15.7,1X,A,1X,1PG15.7)') ' WARNING: abs. WB error [m3] = ', abs(RCHFLX_in%ROUTE(ixRoute)%WB), '>',wb_tol
+  !end if
 
   END SUBROUTINE comp_reach_wb
 
@@ -184,25 +184,25 @@ CONTAINS
 
     wb_error = wb_global(1)-sum(wb_global(2:6))
 
-    if (verbose) then
-      if (masterproc) then
-        write(iulog,'(A)')         ' ---------------------------'
-        write(iulog,'(A)')         ' -- global water balance  --'
-        write(iulog,'(A)')         ' ---------------------------'
-        write(iulog,'(A)')         ' 8=1-(2+3+4+5+6)'
-        write(iulog,'(A,1PG15.7)') ' 1 dVol [m3]              = ', wb_global(1)
-        write(iulog,'(A,1PG15.7)') ' 2 lateral flow [m3]      = ', wb_global(2)
-        write(iulog,'(A,1PG15.7)') ' 3 precip [m3]            = ', wb_global(3)
-        write(iulog,'(A,1PG15.7)') ' 4 waterTake-actual [m3]  = ', wb_global(4)
-        write(iulog,'(A,1PG15.7)') ' 5 evaporation [m3]       = ', wb_global(5)
-        write(iulog,'(A,1PG15.7)') ' 6 outflow [m3]           = ', wb_global(6)
-        write(iulog,'(A,1PG15.7)') ' 7 waterTake-demand [m3]  = ', wb_global(7)
-        write(iulog,'(A,1PG15.7)') ' 8 WBerr [m3]             = ', wb_error
-      end if
-    endif
-    if (abs(wb_error) > 1._dp) then ! tolerance is 1 [m3]
-      write(iulog,'(A,1PG15.7,1X,A)') ' WARNING: global WB error [m3] = ', wb_error, '> 1.0 [m3]'
-    end if
+    !if (verbose) then
+    !  if (masterproc) then
+    !    write(iulog,'(A)')         ' ---------------------------'
+    !    write(iulog,'(A)')         ' -- global water balance  --'
+    !    write(iulog,'(A)')         ' ---------------------------'
+    !    write(iulog,'(A)')         ' 8=1-(2+3+4+5+6)'
+    !    write(iulog,'(A,1PG15.7)') ' 1 dVol [m3]              = ', wb_global(1)
+    !    write(iulog,'(A,1PG15.7)') ' 2 lateral flow [m3]      = ', wb_global(2)
+    !    write(iulog,'(A,1PG15.7)') ' 3 precip [m3]            = ', wb_global(3)
+    !    write(iulog,'(A,1PG15.7)') ' 4 waterTake-actual [m3]  = ', wb_global(4)
+    !    write(iulog,'(A,1PG15.7)') ' 5 evaporation [m3]       = ', wb_global(5)
+    !    write(iulog,'(A,1PG15.7)') ' 6 outflow [m3]           = ', wb_global(6)
+    !    write(iulog,'(A,1PG15.7)') ' 7 waterTake-demand [m3]  = ', wb_global(7)
+    !    write(iulog,'(A,1PG15.7)') ' 8 WBerr [m3]             = ', wb_error
+    !  end if
+    !endif
+    !if (abs(wb_error) > 1._dp) then ! tolerance is 1 [m3]
+    !  write(iulog,'(A,1PG15.7,1X,A)') ' WARNING: global WB error [m3] = ', wb_error, '> 1.0 [m3]'
+    !end if
     flush(iulog)
 
     CONTAINS
